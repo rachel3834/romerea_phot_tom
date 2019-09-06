@@ -25,6 +25,8 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('--phot_db_path', help='Path to pyDANDIA photometry database')
         parser.add_argument('--field_name', help='Name of the field')
+        parser.add_argument('--start_star_index', help='Index of the first star to ingest products for')
+        parser.add_argument('--end_star_index', help='Index of the last star to ingest products for')
 
     def check_arguments(self, options):
 
@@ -99,7 +101,7 @@ class Command(BaseCommand):
 
         lut = {}
 
-        for entry in phot_table[0:10]:
+        for entry in phot_table:
 
             key = str(entry['facility'])+'_'+str(entry['filter'])
 
@@ -156,7 +158,10 @@ class Command(BaseCommand):
 
         group = self.fetch_or_create_data_product_group()
 
-        for star in stars_table[0:10]:
+        istar_start = int(options['start_star_index']) - 1
+        istar_end = int(options['end_star_index'])
+
+        for star in stars_table[istar_start:istar_end]:
 
             log.info('Starting ingest for star '+str(star['star_id']))
 
