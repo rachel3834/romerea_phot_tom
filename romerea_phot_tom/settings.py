@@ -261,6 +261,18 @@ EXTRA_FIELDS = [
     {'name': 'vphas_imag', 'type': 'number'},
     {'name': 'vphas_imag_error', 'type': 'number'},
     {'name': 'vphas_clean', 'type': 'number'},
+    {'name': 'cal_mag_corr_g', 'type': 'number'},
+    {'name': 'cal_mag_corr_g_err', 'type': 'number'},
+    {'name': 'cal_mag_corr_r', 'type': 'number'},
+    {'name': 'cal_mag_corr_r_err', 'type': 'number'},
+    {'name': 'cal_mag_corr_i', 'type': 'number'},
+    {'name': 'cal_mag_corr_i_err', 'type': 'number'},
+    {'name': 'gi', 'type': 'number'},
+    {'name': 'gi_err', 'type': 'number'},
+    {'name': 'gr', 'type': 'number'},
+    {'name': 'gr_err', 'type': 'number'},
+    {'name': 'ri', 'type': 'number'},
+    {'name': 'ri_err', 'type': 'number'},
     ]
 
 # Authentication strategy can either be LOCKED (required login for all views)

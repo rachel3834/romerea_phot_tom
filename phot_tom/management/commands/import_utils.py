@@ -36,6 +36,13 @@ def fetch_primary_reference_photometry(conn,pri_refimg):
 
     return pri_phot_table
 
+def fetch_star_colours(conn):
+
+    query = 'SELECT * FROM star_colours'
+    star_colours = phot_db.query_to_astropy_table(conn, query, args=())
+
+    return star_colours
+
 def fetch_dataset_list(conn):
 
     query = 'SELECT * FROM reference_images'

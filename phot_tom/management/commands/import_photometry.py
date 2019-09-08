@@ -20,7 +20,7 @@ from phot_tom.management.commands import import_utils
 
 class Command(BaseCommand):
 
-    help = 'Imports photometry data on stars from of the ROME/REA survey'
+    help = 'Imports photometry data on stars from the ROME/REA survey'
 
     def add_arguments(self, parser):
         parser.add_argument('--phot_db_path', help='Path to pyDANDIA photometry database')
