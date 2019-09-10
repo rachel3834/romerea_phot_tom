@@ -17,22 +17,21 @@
   </div>
   <div class="col-md-8">
     <ul class="nav nav-tabs" id="tabs">
-      <li class="nav-item">
+      <li class="nav-item sub-navbar-tab ">
         <span class="nav-link active" data-target="#field-image" data-toggle="tab">Field Image</span>
       </li>
-      <li class="nav-item">
+      <li class="nav-item sub-navbar-tab">
         <span class="nav-link" data-target="#manage-data" data-toggle="tab">Manage Data</span>
       </li>
-      <li class="nav-item">
+      <li class="nav-item sub-navbar-tab">
         <span class="nav-link" data-target="#photometry" data-toggle="tab">Photometry</span>
       </li>
-      <li class="nav-item">
+      <li class="nav-item sub-navbar-tab">
         <span class="nav-link" data-target="#spectroscopy" data-toggle="tab">Spectroscopy</span>
       </li>
     </ul>
     <div class="tab-content">
       <div class="tab-pane in active" id="field-image">
-          <p class="text-center">Full colour image for {{object.name}}</p>
           <p class="text-center">{% field_image object %}</p>
       </div>
       <div class="tab-pane" id="manage-data">

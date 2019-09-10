@@ -5,11 +5,12 @@
 {% block content %}
 <div class="row" width="100%">
   <div class="col-lg-6">
-    <h2 class="text-center">ROME/REA Photometry TOM</h2>
-    <p class="text-center"><img src="{% static 'img/ROME_FIELDS_fa15.jpeg' %}" class="img-fluid mx-auto"></p>
+    <p class="text-center"><img src="{% static 'img/ROME_FIELDS_fa15.jpeg' %}" alt="ROME Field map" class="img-fluid mx-auto rounded-corners"></p>
   </div>
   <div class="col-lg-6">
-    {% fields_table %}
+    <p class="text-center">
+      {% fields_table %}
+    </p>
   </div>
 </div>
 <footer class="footer-bar">

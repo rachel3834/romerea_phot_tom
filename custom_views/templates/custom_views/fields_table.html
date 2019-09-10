@@ -1,8 +1,10 @@
 <table>
 <tr>
+  <thead>
 {% for header in table_columns %}
     <th>{{ header }}</th>
 {% endfor %}
+  </thead>
 </tr>
 {% for row in table_rows %}
     <tr>
