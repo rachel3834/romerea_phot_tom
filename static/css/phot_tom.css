@@ -1,0 +1,75 @@
+body {
+  padding-top: 7rem;
+  background-color: black;
+}
+
+a, p {
+  color: white;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: white;
+}
+
+td, th {
+  color: white;
+}
+
+.right-align {
+  text-align: right;
+  margin-right: 20px;
+}
+
+.title-bar {
+  background-color: #474959;
+  opacity: 0.75;
+  background-position: center;
+  height: 100px;
+}
+
+.footer-bar {
+  background-color: black;
+  background-position: center;
+  height: 30px;
+}
+
+.title-caption {
+  display: block;
+  font-family: 'Helvetica', serif;
+  font-size: 35px;
+  line-height: 14px;
+  margin-left: 20px;
+  padding: 10px;
+  position: relative;
+  top: 15%;
+  width: 60%;
+  color: white;
+  opacity: 0.75;
+}
+
+.nav-tabs {
+  border-bottom: 1px solid #474959;
+}
+.navbar-tab {
+  font-family: 'Helvetica', serif;
+  font-size: 30px;
+  color: white;
+  background-color: black;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+  border-bottom: 1px solid #474959;
+  border-top: 1px solid #474959;
+  border-left: 1px solid #474959;
+  border-right: 1px solid #474959;
+  opacity: 0.75;
+}
+
+.navbar-tab.active {
+  font-family: 'Helvetica', serif;
+  font-size: 30px;
+  color: white;
+  background-color: #474959;
+  opacity: 0.75;
+}
