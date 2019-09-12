@@ -41,7 +41,7 @@ td, th {
 
 .title-caption {
   display: block;
-  font-family: 'Helvetica', serif;
+  font-family: "Impact", serif;
   font-size: 35px;
   text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.5);
   line-height: 14px;
@@ -195,8 +195,29 @@ img.rounded-corners {
   padding:5px;
   border:2px solid #474959;
 }
+
+.with-gutter {
+    padding-right:1.5rem;
+    padding-left:1.5rem;
+}
+
 .tom-db-button {
   background-image: -moz-linear-gradient(#474959,#789496);
   background-image: -webkit-linear-gradient(#474959,#789496);
   background-image: linear-gradient(#474959,#789496);
+  color: white;
+}
+
+/* Style the buttons that are used to open the tab content */
+.data-tab {
+  color: white;
+  font-family: 'Helvetica', serif;
+  font-size: 20px;
+  background-image: -moz-linear-gradient(black, #474959);
+  background-image: -webkit-linear-gradient(black, #474959);
+  background-image: linear-gradient(black, #474959);
+  padding-top: 1rem;
+  padding-left: 3rem;
+  padding-right: 3rem;
+  padding-bottom: 1rem;
 }

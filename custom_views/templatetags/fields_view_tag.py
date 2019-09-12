@@ -25,11 +25,16 @@ def fields_table():
         f = SkyCoord(e.target.ra, e.target.dec,
                      frame='icrs', unit=(u.deg, u.deg))
 
-        stars = TargetExtra.objects.filter(key='rome_field', value=e.target.name)
+        qs = TargetExtra.objects.filter(key='nstars', target=e.target)
+
+        if len(qs) == 0:
+            nstars = 0
+        else:
+            nstars = qs[0].value
 
         table_rows.append( [e.target.id, e.target.name, f.ra.to_string(unit=u.hourangle, sep=':'),
                             f.dec.to_string(unit=u.degree, sep=':'),
-                            len(stars)] )
+                            str(int(nstars))] )
 
     return {'table_columns': table_columns, 'table_rows': table_rows}
 
