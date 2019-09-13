@@ -24,7 +24,7 @@ def navigable_image(target):
         keylist = ['naxis1', 'naxis2', 'pixscale']
 
         for key in keylist:
-            qs = TargetExtra.objects.filter(target=target, key='naxis1')
+            qs = TargetExtra.objects.filter(target=target, key=key)
 
             if len(qs) > 0:
                 params[key] = float(qs[0].value)
@@ -39,8 +39,8 @@ def navigable_image(target):
     image_file = path.join('/static','img',str(target.name)+'_colour.png')
 
     if len(params) > 0:
-        half_width_y = (params['naxis1']/2.0) * params['pixscale']
-        half_width_x = (params['naxis2']/2.0) * params['pixscale']
+        half_width_y = ( (params['naxis1']/2.0) * params['pixscale'] ) / 3600.0
+        half_width_x = ( (params['naxis2']/2.0) * params['pixscale'] ) / 3600.0
 
         xdata = np.arange(float(target.ra)-half_width_x,float(target.ra)+half_width_x,0.25)
         ydata = np.arange(float(target.dec)-half_width_y,float(target.dec)+half_width_y,0.25)
@@ -51,8 +51,6 @@ def navigable_image(target):
 
         fig.add_trace(
                     go.Scatter(
-                        #x=[0, (params['naxis2']*scale_factor)],
-                        #y=[0, (params['naxis1']*scale_factor)],
                         x=xdata,
                         y=ydata,
                         mode="markers",
@@ -62,22 +60,28 @@ def navigable_image(target):
 
         fig.update_xaxes(
                     visible=True,
-                    range=[0, (params['naxis2']*scale_factor)]
+                    range=[xdata.min(), xdata.max()],
+                    title_text='RA [deg]',
+                    linecolor='white',
+                    color = 'white'
                 )
 
         fig.update_yaxes(
-                    visible=False,
-                    range=[0, (params['naxis1']*scale_factor)],
+                    visible=True,
+                    range=[ydata.min(), ydata.max()],
                     # the scaleanchor attribute ensures that the aspect ratio stays constant
-                    scaleanchor="x"
+                    scaleanchor="x",
+                    title_text='Dec [deg]',
+                    linecolor='white',
+                    color = 'white'
                 )
 
         fig.update_layout(
                     images=[go.layout.Image(
-                        x=0,
-                        sizex=(params['naxis1']*scale_factor),
-                        y=(params['naxis2']*scale_factor),
-                        sizey=params['naxis2']*scale_factor,
+                        x=xdata.min(),
+                        sizex=((xdata.max()-xdata.min())),
+                        y=ydata.max(),
+                        sizey=abs((ydata.max()-ydata.min())),
                         xref="x",
                         yref="y",
                         opacity=1.0,
@@ -90,6 +94,8 @@ def navigable_image(target):
                     width=(params['naxis1']*scale_factor),
                     height=(params['naxis2']*scale_factor),
                     margin={"l": 0, "r": 0, "t": 0, "b": 0},
+                    plot_bgcolor='black',
+                    paper_bgcolor='black',
                 )
 
         return {

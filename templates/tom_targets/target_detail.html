@@ -1,6 +1,5 @@
 {% extends 'tom_common/base.html' %}
 {% load comments bootstrap4 tom_common_extras targets_extras observation_extras dataproduct_extras static cache %}
-{% load fields_view_tag image_display_tag %}
 {% block title %}Target {{ object.name }}{% endblock %}
 {% block additional_css %}
 <link rel="stylesheet" href="{% static 'tom_targets/css/main.css' %}">
@@ -22,6 +21,7 @@
     <div class="row box-frame" role="tabpanel">
       <ul>
         <li class="active nav data-tab"><a href="#field-image" data-toggle="tab">Reference image</a></li>
+        <li class="nav data-tab"><a href="#cmd" data-toggle="tab">Color-mag diagram</a></li>
         <li class="nav data-tab"><a href="#manage-data" data-toggle="tab">Manage data</a></li>
         <li class="nav data-tab"><a href="#photometry" data-toggle="tab">Photometry</a></li>
       </ul>
@@ -32,7 +32,12 @@
   <div class="col-md-8 with-gutter">
     <div class="tab-content">
       <div class="tab-pane active" id="field-image">
+          {% load fields_view_tag image_display_tag %}
           {% navigable_image target %}
+      </div>
+      <div class="tab-pane" id="cmd">
+          {% load color_mag_plots_tag %}
+          {% color_mag_diagram target %}
       </div>
       <div class="tab-pane" id="manage-data">
         {% include 'tom_dataproducts/upload_dataproduct.html' %}

@@ -17,6 +17,18 @@ def fetch_primary_reference_image_from_phot_db(conn):
 
     return pri_refimg
 
+def fetch_reference_component_image(conn, refimage_id):
+
+    query = 'SELECT * FROM reference_components WHERE reference_image="'+str(refimage_id)+'"'
+    ref_comp = phot_db.query_to_astropy_table(conn, query, args=())
+
+    if len(ref_comp) > 0:
+
+        query = 'SELECT * FROM images WHERE img_id="'+str(ref_comp['image'][0])+'"'
+        image = phot_db.query_to_astropy_table(conn, query, args=())
+
+    return image
+
 def fetch_starlist_from_phot_db(conn,pri_refimg,log=None):
 
     query = 'SELECT * FROM stars WHERE reference_image="'+str(pri_refimg['refimg_id'][0])+'"'
@@ -30,6 +42,7 @@ def fetch_starlist_from_phot_db(conn,pri_refimg,log=None):
 def fetch_primary_reference_photometry(conn,pri_refimg):
 
     query = 'SELECT * FROM phot WHERE reference_image="'+str(pri_refimg['refimg_id'][0])+'"'
+    print(query)
     pri_phot_table = phot_db.query_to_astropy_table(conn, query, args=())
 
     print('Extracted '+str(len(pri_phot_table))+' photometric datapoints for the primary reference image')
