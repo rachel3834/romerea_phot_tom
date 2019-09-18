@@ -9,6 +9,7 @@ from datetime import datetime
 import pytz
 import json
 import logging
+import numpy as np
 from phot_tom.management.commands import import_utils
 
 class Command(BaseCommand):
@@ -67,14 +68,30 @@ class Command(BaseCommand):
         else:
             return None
 
+    def get_or_create_data_product(self, data_product_params, group):
+
+        qs = DataProduct.objects.filter(product_id=data_product_params['product_id'])
+
+        if len(qs) > 0:
+            return qs[0]
+
+        elif len(qs) == 0:
+            product = DataProduct.objects.create(**data_product_params)
+            product.group.add(group)
+
+            return product
+
+        else:
+            raise IOError('Found multiple DataProducts with ID='+data_product_params['product_id'])
+
     def field_extra_params(self):
 
-        field_keys = {'cal_mag_corr_g': ['float', 'g'],
-                    'cal_mag_corr_r': ['float', 'r'],
-                    'cal_mag_corr_i': ['float', 'i'],
-                    'gi': ['float', 'gi'],
-                    'gr': ['float', 'gr'],
-                    'ri': ['float', 'ri']}
+        field_keys = ['cal_mag_corr_g', 'cal_mag_corr_g_err',
+                      'cal_mag_corr_r', 'cal_mag_corr_r_err',
+                      'cal_mag_corr_i', 'cal_mag_corr_i_err',
+                      'gi', 'gi_err',
+                      'gr', 'gr_err',
+                      'ri', 'ri_err']
 
         return field_keys
 
@@ -99,7 +116,7 @@ class Command(BaseCommand):
         date_obs = date_obs.replace(tzinfo=pytz.UTC)
         log.info('Reference image timestamp '+date_obs.strftime("%Y-%m-%dT%H:%M:%S.%f"))
 
-        data_source = str(ref_image['facility'])+'_'+str(image['filter'])
+        data_source = str(ref_image['facility'][0])+'_'+str(ref_image['filter'][0])
         log.info('Data source code is '+data_source)
 
         star_colours = import_utils.fetch_star_colours(conn)
@@ -108,36 +125,57 @@ class Command(BaseCommand):
         group = self.fetch_or_create_data_product_group()
         log.info('Data product group is '+repr(group))
 
-        field_target = self.check_field_in_tom(self,options['field_name'],log)
+        field_target = self.check_field_in_tom(options['field_name'],log)
         log.info('Associating with field Target '+repr(field_target))
-        exit()
 
-        for key, key_params in self.field_extra_params():
+        product_id = options['field_name']+'_pri_ref_colours'
+        print('Using product ID='+product_id)
 
-            product_id = options['field_name']+'_pri_ref_'+key
+        data_file = path.basename(options['phot_db_path'])+'.'+product_id
 
-            data_file = path.basename(options['phot_db_path'])+'.'+product_id
+        data_product_params = {"product_id": product_id,
+                              "target": field_target,
+                              "observation_record": None,
+                              "data": data_file,  # This is used for uploaded file paths
+                              "extra_data": None,
+                              "tag": "photometry",
+                              "featured": False,
+                            }
 
-            data_product_params = {"product_id": product_id,
-                                  "target": field_target,
-                                  "observation_record": None,
-                                  "data": data_file,  # This is used for uploaded file paths
-                                  "extra_data": key_params[1],
-                                  "tag": "photometry",
-                                  "featured": False,
-                                }
+        product = self.get_or_create_data_product(data_product_params, group)
 
-            product = DataProduct.objects.create(**data_product_params)
-            product.group.add(group)
+        field_keys = self.field_extra_params()
 
-            data = star_colours[key].to_list()
-            errors = star_colours[key+'_err'].to_list()
+        data_array = []
+        ns = 0
 
-            value = {"magnitude": data,
-                    "magnitude_error": errors,
-                    "filter": key_params[1]}
+        for j in range(0, len(star_colours), 1):
 
-            datum_params = {"target": target,
+            if star_colours['cal_mag_corr_g'] > 0.0 or \
+                star_colours['cal_mag_corr_r'] > 0.0 or \
+                    star_colours['cal_mag_corr_i'] > 0.0:
+
+                star_data = []
+
+                for key in field_keys:
+                    star_data.append(star_colours[key])
+
+                data_array.append(star_data)
+
+        data_array = np.array(data_array)
+
+        #data = np.array(star_colours[key]).tolist()
+        #errors = np.array(star_colours[key+'_err']).tolist()
+
+        value = {}
+        for i,key in enumerate(field_keys.keys()):
+            value[key] = data_array[:,0]
+
+        #value = {"magnitude": data,
+        #         "magnitude_error": errors,
+        #         "filter": key_params[1]}
+
+        datum_params = {"target": field_target,
                           "data_product": product,
                           "data_type": "photometry",
                           "source_name": product_id,
@@ -146,4 +184,4 @@ class Command(BaseCommand):
                           "value": json.dumps(value),
                           }
 
-            datum = ReducedDatum.objects.create(**datum_params)
+        datum = ReducedDatum.objects.create(**datum_params)

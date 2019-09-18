@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'tom_dataproducts',
     'phot_tom.apps.PhotTomConfig',
     'custom_views',
+    'silk',
 ]
 
 SITE_ID = 1
@@ -68,6 +69,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'tom_common.middleware.ExternalServiceMiddleware',
+    'silk.middleware.SilkyMiddleware',
 ]
 
 ROOT_URLCONF = 'romerea_phot_tom.urls'

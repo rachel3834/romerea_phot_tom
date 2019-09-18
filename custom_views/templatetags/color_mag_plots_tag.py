@@ -11,6 +11,7 @@ import numpy as np
 from os import path, getcwd
 
 from tom_targets.models import Target, TargetExtra
+from tom_dataproducts.models import ReducedDatum
 
 register = template.Library()
 @register.inclusion_tag('custom_views/plot_display.html')
@@ -20,36 +21,22 @@ def color_mag_diagram(target):
 
         params = {}
 
-        keylist = ['cal_mag_corr_g', 'gi']
+        print('Starting first query')
+        qs_mag = ReducedDatum.objects.filter(source_name=field_target.name+'_pri_ref_cal_mag_corr_g')
+        print('End first query')
+        qs_col = ReducedDatum.objects.filter(source_name=field_target.name+'_pri_ref_gi')
+        print('End second query')
 
-        qs_mag = TargetExtra.objects.filter(target__name__contains=field_target.name+'-', key='cal_mag_corr_g')
-        qs_col = TargetExtra.objects.filter(target__name__contains=field_target.name+'-', key='gi')
+        print(len(qs_mag), len(qs_col))
+
+        print(qs_mag)
 
         colour_data = []
 
-        for j in stars:
-            data = []
-
-            for key in keylist:
-                #qs = TargetExtra.objects.filter(target=j, key=key)
-
-                gmag = j.cal_mag_corr_g
-                gi = j.gi
-
-                data = [ gmag, gi ]
-
-                #if len(qs) > 0:
-                #    data.append(float(qs[0].value))
-
-            if len(data) == len(keylist):
-                colour_data.append(data)
-                print(data)
-
         return colour_data
 
-    print('Got here for field '+repr(target))
-
     colour_data = fetch_color_data_for_field(target)
+    print('Got data')
 
     if len(colour_data) > 0:
 

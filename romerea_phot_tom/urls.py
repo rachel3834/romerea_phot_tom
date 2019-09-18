@@ -14,7 +14,10 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path, include
+from django.conf.urls import url
 
 urlpatterns = [
     path('', include('tom_common.urls')),
 ]
+
+urlpatterns += [url(r'^silk/', include('silk.urls', namespace='silk'))]
