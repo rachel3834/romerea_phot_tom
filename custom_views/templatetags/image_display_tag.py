@@ -61,7 +61,11 @@ def navigable_image(target):
         fig.update_xaxes(
                     visible=True,
                     range=[xdata.min(), xdata.max()],
-                    title_text='RA [deg]',
+                    title=go.layout.xaxis.Title(
+                        text='RA [mag]',
+                        font=dict(
+                            size=18,
+                            color='white')),
                     linecolor='white',
                     color = 'white'
                 )
@@ -71,7 +75,11 @@ def navigable_image(target):
                     range=[ydata.min(), ydata.max()],
                     # the scaleanchor attribute ensures that the aspect ratio stays constant
                     scaleanchor="x",
-                    title_text='Dec [deg]',
+                    title=go.layout.yaxis.Title(
+                        text='Dec [deg]',
+                        font=dict(
+                            size=18,
+                            color='white')),
                     linecolor='white',
                     color = 'white'
                 )
@@ -91,9 +99,12 @@ def navigable_image(target):
                 )
 
         fig.update_layout(
+                    title='Reference Image',
+                    font=dict(color="white",size=20),
                     width=(params['naxis1']*scale_factor),
                     height=(params['naxis2']*scale_factor),
-                    margin={"l": 0, "r": 0, "t": 0, "b": 0},
+                    #margin={"l": 0, "r": 0, "t": 0, "b": 0},
+                    margin={"l": 55, "r": 15, "t": 55, "b": 55},
                     plot_bgcolor='black',
                     paper_bgcolor='black',
                 )

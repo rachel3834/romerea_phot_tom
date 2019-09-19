@@ -54,6 +54,10 @@
             <span><img src="{% static 'img/field_icon.png' %}" width="50px"></span>
             Fields<span class="sr-only">(current)</span></a>
         </li>
+        <li class="nav-item navbar-tab {% if 'search' in request.resolver_match.url_name %}active{% endif %}">
+          <a class="nav-link" href="{% url 'user-list' %}">
+            <span><img src="{% static 'img/search_icon.png' %}" width="50px"></span>Search</a>
+        </li>
         <li class="nav-item navbar-tab {% if 'user' in request.resolver_match.url_name %}active{% endif %}">
           <a class="nav-link" href="{% url 'user-list' %}">
             <span><img src="{% static 'img/users_icon.png' %}" width="50px"></span>Users</a>

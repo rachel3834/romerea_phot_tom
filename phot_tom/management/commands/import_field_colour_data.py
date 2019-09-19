@@ -86,12 +86,18 @@ class Command(BaseCommand):
 
     def field_extra_params(self):
 
-        field_keys = ['cal_mag_corr_g', 'cal_mag_corr_g_err',
-                      'cal_mag_corr_r', 'cal_mag_corr_r_err',
-                      'cal_mag_corr_i', 'cal_mag_corr_i_err',
-                      'gi', 'gi_err',
-                      'gr', 'gr_err',
-                      'ri', 'ri_err']
+        field_keys = {'cal_mag_corr_g': 'g',
+                      'cal_mag_corr_g_err': 'gerr',
+                      'cal_mag_corr_r': 'r',
+                      'cal_mag_corr_r_err': 'rerr',
+                      'cal_mag_corr_i': 'i',
+                      'cal_mag_corr_i_err': 'ierr',
+                      'gi': 'gierr',
+                      'gi_err': 'gierr',
+                      'gr': 'gr',
+                      'gr_err': 'grerr',
+                      'ri': 'ri',
+                      'ri_err': 'rierr'}
 
         return field_keys
 
@@ -128,22 +134,6 @@ class Command(BaseCommand):
         field_target = self.check_field_in_tom(options['field_name'],log)
         log.info('Associating with field Target '+repr(field_target))
 
-        product_id = options['field_name']+'_pri_ref_colours'
-        print('Using product ID='+product_id)
-
-        data_file = path.basename(options['phot_db_path'])+'.'+product_id
-
-        data_product_params = {"product_id": product_id,
-                              "target": field_target,
-                              "observation_record": None,
-                              "data": data_file,  # This is used for uploaded file paths
-                              "extra_data": None,
-                              "tag": "photometry",
-                              "featured": False,
-                            }
-
-        product = self.get_or_create_data_product(data_product_params, group)
-
         field_keys = self.field_extra_params()
 
         data_array = []
@@ -151,37 +141,60 @@ class Command(BaseCommand):
 
         for j in range(0, len(star_colours), 1):
 
-            if star_colours['cal_mag_corr_g'] > 0.0 or \
-                star_colours['cal_mag_corr_r'] > 0.0 or \
-                    star_colours['cal_mag_corr_i'] > 0.0:
+            if star_colours['cal_mag_corr_g'][j] > 0.0 or \
+                star_colours['cal_mag_corr_r'][j] > 0.0 or \
+                    star_colours['cal_mag_corr_i'][j] > 0.0:
 
                 star_data = []
 
-                for key in field_keys:
-                    star_data.append(star_colours[key])
+                for key in field_keys.keys():
+                    star_data.append(star_colours[key][j])
 
                 data_array.append(star_data)
 
         data_array = np.array(data_array)
 
-        #data = np.array(star_colours[key]).tolist()
-        #errors = np.array(star_colours[key+'_err']).tolist()
+        print('Built data array')
 
-        value = {}
-        for i,key in enumerate(field_keys.keys()):
-            value[key] = data_array[:,0]
+        for i,(key,tag) in enumerate(field_keys.items()):
 
-        #value = {"magnitude": data,
-        #         "magnitude_error": errors,
-        #         "filter": key_params[1]}
+            if '_err' not in key:
 
-        datum_params = {"target": field_target,
-                          "data_product": product,
-                          "data_type": "photometry",
-                          "source_name": product_id,
-                          "source_location": data_source,
-                          "timestamp": date_obs,
-                          "value": json.dumps(value),
-                          }
+                product_id = options['field_name']+'_pri_ref_'+key
+                print('Using product ID='+product_id)
 
-        datum = ReducedDatum.objects.create(**datum_params)
+                data_file = path.basename(options['phot_db_path'])+'.'+product_id
+
+                data_product_params = {"product_id": product_id,
+                                      "target": field_target,
+                                      "observation_record": None,
+                                      "data": data_file,  # This is used for uploaded file paths
+                                      "extra_data": tag,
+                                      "tag": "photometry",
+                                      "featured": False,
+                                    }
+
+                product = self.get_or_create_data_product(data_product_params, group)
+
+                value = {"magnitude": data_array[:,i].tolist(),
+                         "magnitude_error": data_array[:,i+1].tolist(),
+                         "filter": tag}
+
+                #value = {}
+                #for i,(key,tag) in enumerate(field_keys.items()):
+                #    value[key] = data_array[:,i].tolist()
+                #value['filter'] = 'gri'
+
+                datum_params = {"target": field_target,
+                              "data_product": product,
+                              "data_type": "photometry",
+                              "source_name": product_id,
+                              "source_location": data_source,
+                              "timestamp": date_obs,
+                              "value": json.dumps(value)}
+
+                print('Composed datum parameters')
+
+                datum = ReducedDatum.objects.create(**datum_params)
+
+                print('Created datum')
