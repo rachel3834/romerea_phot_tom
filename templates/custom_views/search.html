@@ -1,0 +1,69 @@
+{% extends 'tom_common/base.html' %}
+{% load static targets_extras observation_extras dataproduct_extras tom_common_extras %}
+{% block title %}ROME/REA Photometry TOM{% endblock %}
+{% block content %}
+
+{% if search_type == None or search_type == 'name' %}
+<div width="100%">
+  <center><h3>Target Search</h3></center>
+</div>
+  <div class="centerbox-container">
+    <div class="centerbox">
+      <form method="POST" class="post-form" action="{% url 'search' %}" >{% csrf_token %}
+          <table>
+              <tr>
+                  <td><label for="{{nform.name.id_for_label}}">Target name:</label></td>
+                  <td>
+                      <div class="fieldWrapper">
+                          {{nform.name.errors}}
+                          {{nform.name}}
+                      </div>
+                  </td>
+                  <td>
+                      <div class="fieldWrapper">
+                          <button type="submit" class="save btn btn-default">Submit</button>
+                      </div>
+                  </td>
+              </tr>
+          </table>
+      </form>
+    </div>
+  </div>
+{% endif %}
+
+{% if message|length > 0 %}
+<div class="centerbox-container">
+  <div class="centerbox">
+    <center><h5>{{message}}</h5></center>
+  </div>
+</div>
+{% endif %}
+
+{% if rows|length > 0 %}
+<div class="centerbox-container">
+  <div class="centerbox">
+    <p>
+    {% if rows|length == 1 %}
+        <center>Search returned {{rows|length}} entries</center>
+    {% else %}
+        <center>Search returned {{rows|length}} entries</center>
+    {% endif %}
+    </p>
+    <p>
+<table class="sortable" border="0">
+    <tr><th>Entry number</th><th>Name</th><th>RA</th><th>Dec</th></tr>
+    {% for row in rows %}
+      <tr>
+          <td><a href={% url 'targets:detail' row.0 %} STYLE="text-decoration:none">{{ row.0 }}</a></td>
+          <td><a href={% url 'targets:detail' row.0 %} STYLE="text-decoration:none">{{ row.1 }}</a></td>
+          <td>{{ row.2 }}</td>
+          <td>{{ row.3 }}</td>
+      </tr>
+    {% endfor %}
+</table>
+</p>
+</div>
+</div>
+{% endif %}
+
+{% endblock %}

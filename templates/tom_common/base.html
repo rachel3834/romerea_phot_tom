@@ -55,7 +55,7 @@
             Fields<span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item navbar-tab {% if 'search' in request.resolver_match.url_name %}active{% endif %}">
-          <a class="nav-link" href="{% url 'user-list' %}">
+          <a class="nav-link" href="{% url 'search' %}">
             <span><img src="{% static 'img/search_icon.png' %}" width="50px"></span>Search</a>
         </li>
         <li class="nav-item navbar-tab {% if 'user' in request.resolver_match.url_name %}active{% endif %}">

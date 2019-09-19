@@ -15,9 +15,15 @@ Including another URLconf
 """
 from django.urls import path, include
 from django.conf.urls import url
+from custom_views import views
+
+app_name = 'custom_views'
 
 urlpatterns = [
     path('', include('tom_common.urls')),
+    url(r'^search/$', views.search, name='search'),
+    url(r'^search/name=(?P<name>[0-9a-zA-Z]+)/$', views.search, name='search'),
+
 ]
 
 urlpatterns += [url(r'^silk/', include('silk.urls', namespace='silk'))]

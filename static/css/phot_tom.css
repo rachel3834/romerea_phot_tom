@@ -25,6 +25,15 @@ td, th {
   margin-right: 20px;
 }
 
+.centerbox-container {
+  text-align: center;
+  padding: 3rem 1.5rem;
+}
+
+.centerbox {
+  display: inline-block;
+}
+
 .title-bar {
   background-image: -moz-linear-gradient(black, #474959);
   background-image: -webkit-linear-gradient(black, #474959);
