@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django import template
 from django import forms
-from .forms import TargetNameForm
+from .forms import TargetNameForm, TargetPositionForm
 from tom_targets.models import Target, TargetExtra
 from astropy.coordinates import SkyCoord
 import astropy.units as u
@@ -9,36 +9,50 @@ import astropy.units as u
 register = template.Library()
 
 @register.inclusion_tag('custom_views/search.html')
-def search(request):
+def search(request,search_type='name'):
 
-    search_type = 'name'
     rows = ()
 
     if request.method == "POST":
 
-        nform = TargetNameForm(request.POST)
+        if search_type=='name':
+            form = TargetNameForm(request.POST)
+        else:
+            form = TargetPositionForm(request.POST)
 
-        if nform.is_valid():
+        if form.is_valid():
 
-            post = nform.save(commit=False)
+            post = form.save(commit=False)
 
-            qs = Target.objects.filter(name__contains=post.name)
+            print('Got HERE')
+
+            if search_type == 'name':
+                qs = Target.objects.filter(name__contains=post.name)
+                print(qs)
+
+            else:
+                radius = post.radius / 3600.0
+                qs = Target.objects.filter()
 
             rows = render_targetset_as_table_rows(qs)
 
             print(rows)
             return render(request, 'custom_views/search.html', \
-                          {'nform':nform,
+                          {'form':form,
                           'message': '',
                           'rows': rows,
                           'search_type': search_type})
 
     else:
 
-        nform = TargetNameForm()
+
+        if search_type=='name':
+            form = TargetNameForm()
+        else:
+            form = TargetPositionForm()
 
         return render(request, 'custom_views/search.html', \
-                      {'nform':nform,
+                      {'form':form,
                       'message': '',
                       'rows': rows,
                       'search_type': search_type})
@@ -59,5 +73,5 @@ def render_targetset_as_table_rows(qs):
 
     rows = zip(pks, names, ras, decs)
     rows = sorted(rows, key=lambda row: row[1])
-    
+
     return rows

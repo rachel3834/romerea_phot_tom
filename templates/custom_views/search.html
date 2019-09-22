@@ -3,33 +3,94 @@
 {% block title %}ROME/REA Photometry TOM{% endblock %}
 {% block content %}
 
-{% if search_type == None or search_type == 'name' %}
-<div width="100%">
-  <center><h3>Target Search</h3></center>
-</div>
-  <div class="centerbox-container">
-    <div class="centerbox">
-      <form method="POST" class="post-form" action="{% url 'search' %}" >{% csrf_token %}
-          <table>
-              <tr>
-                  <td><label for="{{nform.name.id_for_label}}">Target name:</label></td>
-                  <td>
-                      <div class="fieldWrapper">
-                          {{nform.name.errors}}
-                          {{nform.name}}
-                      </div>
-                  </td>
-                  <td>
-                      <div class="fieldWrapper">
-                          <button type="submit" class="save btn btn-default">Submit</button>
-                      </div>
-                  </td>
-              </tr>
-          </table>
-      </form>
+<div class="row content">
+
+  <div class="col-sm-3 sidenav with-gutter">
+    <div class="row box-frame" role="tabpanel">
+      <h3>Search options</h3>
+      <ul>
+        <li class="active nav data-tab"><a href="{% url 'search_target_name' %}">Target name</a></li>
+        <li class="nav data-tab"><a href="{% url 'search_target_position' %}">Position search</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="col-md-8 with-gutter">
+    <div class="tab-content">
+      <div class="tab-pane active">
+        {% if search_type == 'name' %}
+          <div class="col-6 centerbox">
+              <center>
+              <h3>Search by Target Name</h3>
+              <form method="POST" class="post-form" action="{% url 'search_target_name' %}" >{% csrf_token %}
+                  <table width="80%">
+                      <tr>
+                          <td><label for="{{form.name.id_for_label}}">Target name:</label></td>
+                          <td>
+                              <div class="fieldWrapper">
+                                  {{form.name.errors}}
+                                  {{form.name}}
+                              </div>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td></td>
+                          <td align="center">
+                              <div class="fieldWrapper">
+                                  <button type="submit" class="save btn btn-default">Submit</button>
+                              </div>
+                          </td>
+                      </tr>
+                  </table>
+              </center>
+          </div>
+
+          {% else %}
+
+          <div class="col-6 centerbox">
+              <center>
+              <h3>Search by Target Position</h3>
+              <form method="POST" class="post-form" action="{% url 'search_target_position' %}" >{% csrf_token %}
+                  <table width="80%">
+                      <tr>
+                          <td><label for="{{form.name.id_for_label}}">Target RA [deg]:</label></td>
+                          <td>
+                              <div class="fieldWrapper">
+                                  {{form.ra.errors}}
+                                  {{form.ra}}
+                              </div>
+                          </td>
+                              <td><label for="{{form.name.id_for_label}}">Target Dec [deg]:</label></td>
+                              <td>
+                                  <div class="fieldWrapper">
+                                      {{form.dec.errors}}
+                                      {{form.dec}}
+                                  </div>
+                              </td>
+                      </tr>
+                      <tr>
+                        <td><label for="{{form.radius.id_for_label}}">Radius [arcsec]:</label></td>
+                        <td>
+                            <div class="fieldWrapper">
+                                {{form.radius.errors}}
+                                {{form.radius}}
+                            </div>
+                        </td>
+                          <td colspan="2" align="center">
+                              <div class="fieldWrapper">
+                                  <button type="submit" class="save btn btn-default">Submit</button>
+                              </div>
+                          </td>
+                      </tr>
+                  </table>
+              </center>
+          </div>
+
+          {% endif %}
+
     </div>
   </div>
-{% endif %}
 
 {% if message|length > 0 %}
 <div class="centerbox-container">

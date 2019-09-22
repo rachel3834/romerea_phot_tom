@@ -22,7 +22,9 @@ app_name = 'custom_views'
 urlpatterns = [
     path('', include('tom_common.urls')),
     url(r'^search/$', views.search, name='search'),
-    url(r'^search/name=(?P<name>[0-9a-zA-Z]+)/$', views.search, name='search'),
+    url(r'^search/name=(?P<name>[0-9a-zA-Z]+)/$', views.search, {'search_type':'name'}, name='search'),
+    url(r'^search/target_name/$', views.search, {'search_type':'name'}, name='search_target_name'),
+    url(r'^search/target_position/$', views.search, {'search_type':'position'}, name='search_target_position'),
 
 ]
 
