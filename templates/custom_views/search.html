@@ -102,7 +102,7 @@
 
 {% if rows|length > 0 %}
 <div class="centerbox-container">
-  <div class="centerbox">
+  <div class="col-8 centerbox">
     <p>
     {% if rows|length == 1 %}
         <center>Search returned {{rows|length}} entries</center>
@@ -111,19 +111,19 @@
     {% endif %}
     </p>
     <p>
-<table class="sortable" border="0">
-    <tr><th>Entry number</th><th>Name</th><th>RA</th><th>Dec</th></tr>
-    {% for row in rows %}
-      <tr>
-          <td><a href={% url 'targets:detail' row.0 %} STYLE="text-decoration:none">{{ row.0 }}</a></td>
-          <td><a href={% url 'targets:detail' row.0 %} STYLE="text-decoration:none">{{ row.1 }}</a></td>
-          <td>{{ row.2 }}</td>
-          <td>{{ row.3 }}</td>
-      </tr>
-    {% endfor %}
-</table>
-</p>
-</div>
+    <table class="sortable" border="0">
+        <tr><th>Entry number</th><th>Name</th><th>RA</th><th>Dec</th></tr>
+        {% for row in rows %}
+          <tr>
+              <td><a href={% url 'targets:detail' row.0 %} STYLE="text-decoration:none">{{ row.0 }}</a></td>
+              <td><a href={% url 'targets:detail' row.0 %} STYLE="text-decoration:none">{{ row.1 }}</a></td>
+              <td>{{ row.2 }}</td>
+              <td>{{ row.3 }}</td>
+          </tr>
+        {% endfor %}
+    </table>
+    </p>
+  </div>
 </div>
 {% endif %}
 

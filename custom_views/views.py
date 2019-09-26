@@ -22,21 +22,23 @@ def search(request,search_type='name'):
 
         if form.is_valid():
 
-            post = form.save(commit=False)
-
-            print('Got HERE')
-
             if search_type == 'name':
+
+                post = form.save(commit=False)
+
                 qs = Target.objects.filter(name__contains=post.name)
-                print(qs)
 
             else:
-                radius = post.radius / 3600.0
-                qs = Target.objects.filter()
+
+                params = {}
+                for key, value in form.cleaned_data.items():
+                    params[key] = value
+
+                cone_radius = params['radius'] / 3600.0
+                qs = cone_search(params['ra'], params['dec'], cone_radius)
 
             rows = render_targetset_as_table_rows(qs)
 
-            print(rows)
             return render(request, 'custom_views/search.html', \
                           {'form':form,
                           'message': '',
@@ -75,3 +77,31 @@ def render_targetset_as_table_rows(qs):
     rows = sorted(rows, key=lambda row: row[1])
 
     return rows
+
+def cone_search(ra_centre, dec_centre, cone_radius):
+    """RA, Dec and radius should be in decimal degrees"""
+
+    ra_centre = float(ra_centre)
+    dec_centre = float(dec_centre)
+
+    centre = SkyCoord(ra=ra_centre*u.deg, dec=dec_centre*u.deg, frame='icrs')
+
+    ra_min = ra_centre - cone_radius
+    ra_max = ra_centre + cone_radius
+    dec_min = dec_centre - cone_radius
+    dec_max = dec_centre + cone_radius
+
+    qs = Target.objects.filter(ra__gte=ra_min, ra__lte=ra_max,
+                                dec__gte=dec_min, dec__lte=dec_max)
+    results = []
+
+    for star in qs:
+
+        s = SkyCoord(ra=float(star.ra)*u.deg, dec=float(star.dec)*u.deg, frame='icrs')
+
+        sep = centre.separation(s)
+
+        if sep.degree <= cone_radius:
+            results.append(star)
+
+    return results
