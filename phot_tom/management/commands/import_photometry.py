@@ -97,13 +97,13 @@ class Command(BaseCommand):
         else:
             return None
 
-    def identify_datasets(self, conn, phot_table, star, log=None):
+    def identify_datasets(self, conn, phot_table, star, field_name, log=None):
 
         lut = {}
 
         for entry in phot_table:
 
-            key = str(entry['facility'])+'_'+str(entry['filter'])
+            key = str(entry['facility'])+'_'+field_name+'_'+str(entry['filter'])
 
             if key in lut.keys():
                 dataset = lut[key]
@@ -169,7 +169,7 @@ class Command(BaseCommand):
 
             target = self.fetch_star_from_tom(options['field_name'],star['star_id'],log)
 
-            dataset_lut = self.identify_datasets(conn, phot_table, star, log)
+            dataset_lut = self.identify_datasets(conn, phot_table, star, options['field_name'], log)
 
             # Check for existing lightcurves for this star from the
             # facilities listed in the phot_db.  If data are present, delete the
