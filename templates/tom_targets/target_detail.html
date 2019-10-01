@@ -1,6 +1,6 @@
 {% extends 'tom_common/base.html' %}
 {% load comments bootstrap4 tom_common_extras targets_extras observation_extras dataproduct_extras static cache %}
-{% block title %}Target {{ object.name }}{% endblock %}
+{% block title %} Target {{ object.name }}{% endblock %}
 {% block additional_css %}
 <link rel="stylesheet" href="{% static 'tom_targets/css/main.css' %}">
 <link rel="stylesheet" href="{% static 'css/phot_tom.css' %}">
@@ -22,6 +22,7 @@
       <ul>
         <li class="active nav data-tab"><a href="#field-image" data-toggle="tab">Reference image</a></li>
         <li class="nav data-tab"><a href="#cmd" data-toggle="tab">Color-mag diagram</a></li>
+        <li class="nav data-tab"><a href="#ccd" data-toggle="tab">Color-color diagram</a></li>
         <li class="nav data-tab"><a href="#manage-data" data-toggle="tab">Manage data</a></li>
         <li class="nav data-tab"><a href="#photometry" data-toggle="tab">Photometry</a></li>
       </ul>
@@ -38,6 +39,10 @@
       <div class="tab-pane" id="cmd">
           {% load color_mag_plots_tag %}
           {% color_mag_diagram target %}
+      </div>
+      <div class="tab-pane" id="ccd">
+          {% load color_color_plots_tag %}
+          {% color_color_diagram target %}
       </div>
       <div class="tab-pane" id="manage-data">
         {% include 'tom_dataproducts/upload_dataproduct.html' %}

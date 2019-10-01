@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 import tempfile
-import django_heroku
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -23,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '*=w)1^a3^jcy9-64bkx2twtfzqiy7ytgak8yjmc+tqy2ps#@4n'
+SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -192,7 +191,7 @@ TARGET_TYPE = 'SIDEREAL'
 FACILITIES = {
     'LCO': {
         'portal_url': 'https://observe.lco.global',
-        'api_key': '572255bbc8a7596819eb6523a7c4d7231066b398',
+        'api_key': os.environ['LCO_TOKEN'],
     },
     'GEM': {
         'portal_url': {
@@ -302,5 +301,3 @@ try:
     from local_settings import * # noqa
 except ImportError:
     pass
-
-django_heroku.settings(locals())
