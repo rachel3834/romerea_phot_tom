@@ -47,8 +47,8 @@ def color_color_diagram(target):
 
         return colour_data
 
-    plot_limits = {'ri_min': 0.5, 'ri_max': 4.0,
-                    'gr_min': 0.5, 'gr_max': 4.0}
+    plot_limits = {'ri_min': 0.0, 'ri_max': 1.5,
+                    'gr_min': 0.5, 'gr_max': 3.0}
     colour_data = fetch_color_data_for_field(target, plot_limits)
 
     if len(colour_data) > 0:
