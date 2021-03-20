@@ -42,7 +42,7 @@ html5lib==1.0.1
 idna==2.8
 imageio==2.5.0
 importlib-metadata==0.19
-Jinja2==2.10.1
+Jinja2==2.11.3
 jsonschema==2.6.0
 keyring==19.0.2
 kiwisolver==1.1.0
