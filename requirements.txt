@@ -62,7 +62,7 @@ py==1.8.0
 PyAVM==0.9.4
 pycodestyle==2.5.0
 pyephem==3.7.7.0
-Pygments==2.4.2
+Pygments==2.7.4
 pyLIMA==0.1.5
 pyparsing==2.4.2
 pyregion==2.0
